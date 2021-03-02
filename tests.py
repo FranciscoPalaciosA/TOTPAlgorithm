@@ -1,23 +1,52 @@
 import unittest
-from totp import get_totp_token
+from totp import (generate_seed, generate_secret_key, 
+                    get_totp_token)
 
-class TestStringMethods(unittest.TestCase):
+SECRET_KEY = "MQ2TGZLEME3WCNRTG5RTSOLDMM3WMYRVGY3GIOJWMU4WMYJRGA4WEZRRGVRTINZYGQYTAYJTMY2WKYRUMQ2GGNDFGI3GGZBQHAYWMNQ="
+RANDOM_SEQUENCE = '0000'
+class TestTOTPalgorithm(unittest.TestCase):
 
-    def test_upper(self):
-        secret_key = "HA2GKZBRGM2GINRQGM3TGYRUGNQTMYZYGZSDKMJWMZQTEZRYGU2DSZJTMZQWCMBQGY2GCZBZMZRDOMTDGM3TKMRXHA4TAZBSGMZGCZQ="
-        get_totp_token(secret_key, "0000")
-        self.assertEqual('foo'.upper(), 'FOO')
+    def test_generate_seed(self):
+        seed = generate_seed()
+        # All seeds will be random
+        self.assertEqual(len(seed), 64)
 
-    def test_isupper(self):
-        self.assertTrue('FOO'.isupper())
-        self.assertFalse('Foo'.isupper())
+    def test_generate_secret_key(self):
+        seed = ''.join(['A'] * 64)
+        sk = generate_secret_key(seed)
+        self.assertEqual(sk, SECRET_KEY)
 
-    def test_split(self):
-        s = 'hello world'
-        self.assertEqual(s.split(), ['hello', 'world'])
-        # check that s.split fails when the separator is not a string
-        with self.assertRaises(TypeError):
-            s.split(2)
+    def test_totp_dif_time_interval(self):
+        original_time = 240
+        totp = get_totp_token(SECRET_KEY, RANDOM_SEQUENCE, original_time)
+        totp2 = get_totp_token(SECRET_KEY, RANDOM_SEQUENCE, original_time + 120)
+        self.assertNotEqual(totp, totp2)
+
+    def test_totp_dif_random_sequence(self):
+        totp = get_totp_token(SECRET_KEY, RANDOM_SEQUENCE, 240)
+        totp2 = get_totp_token(SECRET_KEY, '1234', 240)
+        self.assertNotEqual(totp, totp2)
+    
+    def test_totp_dif_secret_ket(self):
+        totp = get_totp_token(SECRET_KEY, RANDOM_SEQUENCE, 240)
+        totp2 = get_totp_token(SECRET_KEY.replace('M', 'N'), RANDOM_SEQUENCE, 240)
+        self.assertNotEqual(totp, totp2)
+
+    def test_totp_same_time_interval(self):
+        original_time = 240
+        totp = get_totp_token(SECRET_KEY, RANDOM_SEQUENCE, original_time)
+        totp2 = get_totp_token(SECRET_KEY, RANDOM_SEQUENCE, original_time + 119)
+        self.assertEqual(totp, totp2)
+    
+    def test_totp_same_random_sequence(self):
+        totp = get_totp_token(SECRET_KEY, RANDOM_SEQUENCE, 240)
+        totp2 = get_totp_token(SECRET_KEY, RANDOM_SEQUENCE, 240)
+        self.assertEqual(totp, totp2)
+    
+    def test_totp_same_secret_ket(self):
+        totp = get_totp_token(SECRET_KEY, RANDOM_SEQUENCE, 240)
+        totp2 = get_totp_token(SECRET_KEY, RANDOM_SEQUENCE, 240)
+        self.assertEqual(totp, totp2)
 
 if __name__ == '__main__':
     unittest.main()
