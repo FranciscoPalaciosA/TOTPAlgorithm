@@ -2,8 +2,9 @@ import unittest
 from totp import (generate_seed, generate_secret_key, 
                     get_totp_token)
 
+EMAIL="frankpa97@hotmail.com"
 SECRET_KEY = "MQ2TGZLEME3WCNRTG5RTSOLDMM3WMYRVGY3GIOJWMU4WMYJRGA4WEZRRGVRTINZYGQYTAYJTMY2WKYRUMQ2GGNDFGI3GGZBQHAYWMNQ="
-RANDOM_SEQUENCE = '0000'
+RANDOM_SEQUENCE = ['1', '2', 'A', 'C']
 class TestTOTPalgorithm(unittest.TestCase):
 
     def test_generate_seed(self):

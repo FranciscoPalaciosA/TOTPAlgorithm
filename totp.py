@@ -4,9 +4,15 @@
 import hmac, base64, struct, hashlib, time, secrets
 
 SEED_LENGTH = 32
+SECRET_KEY = "MQ2TGZLEME3WCNRTG5RTSOLDMM3WMYRVGY3GIOJWMU4WMYJRGA4WEZRRGVRTINZYGQYTAYJTMY2WKYRUMQ2GGNDFGI3GGZBQHAYWMNQ="
+RANDOM_SEQUENCE = ['1', '3', 'A', 'D']
+TIME=240
+
+TIME_INTERVAL=120
 
 def get_hotp_token(secret, random_seq, intervals_no):
-    intervals_no = int(str(intervals_no) + random_seq)
+    secret = secret.replace(random_seq[0], random_seq[1])
+    secret = secret.replace(random_seq[2], random_seq[3])
     key = base64.b32decode(secret, True)
     #decoding our key
     msg = struct.pack(">Q", intervals_no)
@@ -25,7 +31,7 @@ def get_totp_token(secret, random_seq, intervals_no = time.time()):
       get_hotp_token(
         secret, 
         random_seq,
-        int(intervals_no)//120, 
+        int(intervals_no)//TIME_INTERVAL, 
         ))
     #adding 0 in the beginning till OTP has 6 digits
     while len(x)!=6:
@@ -42,3 +48,5 @@ def generate_secret_key(seed):
     m.digest()
     hex_string = m.hexdigest()
     return base64.b32encode(bytearray(hex_string, 'ascii')).decode('utf-8')
+
+print(get_totp_token(SECRET_KEY, RANDOM_SEQUENCE))
