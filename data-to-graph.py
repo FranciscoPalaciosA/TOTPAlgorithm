@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import itertools
 import sys
+from pathlib import Path
 
 import firebase_admin
 from firebase_admin import auth, credentials, db
@@ -19,7 +20,7 @@ def get_reference(reference_path: str) -> object:
 
 def plot_data(movement, mov_id, matrix):
   combinations = list(itertools.combinations(matrix.keys(), 2))
-  fig, axs = plt.subplots(3, 4)
+  fig, axs = plt.subplots(3, 2)
   fig.suptitle(movement)
   i = 0
   j = 0
@@ -28,20 +29,22 @@ def plot_data(movement, mov_id, matrix):
     #axs[i,j].set_xlim([-1, 1])
     axs[i, j].plot(matrix[var_1], matrix[var_2])
     axs[i, j].set_title(str(var_1)+' vs ' + str(var_2))
-    j += 1 
-
-    #axs[i,j].set_xlim([-1, 1])
-    #axs[i,j].set_ylim([-1, 1])
-    axs[i, j].plot(matrix[var_2], matrix[var_1])
-    axs[i, j].set_title(str(var_2)+' vs ' + str(var_1))
-    j += 1
-    
-    if j == 4:
+    j += 1     
+    if j == 2:
       j = 0
       i += 1
-
+    plot2 = plt.figure(2)
+    plt.plot(matrix[var_1], matrix[var_2])
+    plt.axis('off')
+    path = f'./shape/{movement}/{var_1}-{var_2}'
+    Path(path).mkdir(parents=True, exist_ok=True)
+    plt.savefig(path + f'/{mov_id}.png')
+    plt.clf()
+    
   plt.tight_layout()
-  plt.savefig('./graphs/'+movement+'/'+ mov_id +'.png')
+  path = f'./graphs/{movement}/'
+  Path(path).mkdir(parents=True, exist_ok=True)
+  plt.savefig(path + f'/{mov_id}.png')
   plt.clf()
   """
   plot2 = plt.figure(2)
