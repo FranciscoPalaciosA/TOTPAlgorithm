@@ -24,22 +24,27 @@ import numpy as np
 import random
 from sklearn import ensemble
 
+USED_PAIR_OF_AXIS = 'x-z'
 movements = [
         'Circle',
         'Triangle',
-        'Infinity'
+        'Infinity',
+        'Square',
+        'S_Shape',
+        'Diamond'
         ]
 dataset = []
 labels = []
 for movement in movements:
-    dir = f'./shape/{movement}/w-z'
+    dir = f'./shape/{movement}/{USED_PAIR_OF_AXIS}'
     for filename in os.listdir(dir):
-        f = os.path.join(dir, filename)
-        if os.path.isfile(f):
-            img = cv2.imread(f)
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            dataset.append(gray)
-            labels.append(movement)
+        if filename != '.DS_Store':
+            f = os.path.join(dir, filename)
+            if os.path.isfile(f):
+                img = cv2.imread(f)
+                gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                dataset.append(gray)
+                labels.append(movement)
 dataset = np.array(dataset)
 
 # for index, (image, label) in enumerate(dataset[:100]):
@@ -63,15 +68,12 @@ classifier = ensemble.RandomForestClassifier()
 classifier.fit(sample_images, sample_target)
 
 score = classifier.score(valid_images, valid_target)
-print(f'Score\t{str(score)}')
+print(f'SCORE - \t{str(score)}')
 
-test_inf = cv2.imread('./shape/Infinity/w-z/-MX-YxEfgqmEdfRAlTls.png')
-gray_inf = cv2.cvtColor(test_inf, cv2.COLOR_BGR2GRAY)
-
-# print(x[0].shape)
-# print(y[0])
-
-# print(classifier.predict(x[0].reshape(1,-1)))
-print(classifier.predict(gray_inf.reshape(1,-1)))
-print(classifier.predict_proba(gray_inf.reshape(1,-1)))
-print(classifier.classes_)
+tests = ['-MXI5l9EVJeYUXvp8eDz', '-MXI9Ew5TPIRcCukj0Qc', '-MXIAuDDav93CUv-U-gr']
+for test in tests:
+    test_shape = cv2.imread(f'./tests/shape/Infinity/{USED_PAIR_OF_AXIS}/{test}.png')
+    grayed_test = cv2.cvtColor(test_shape, cv2.COLOR_BGR2GRAY)
+    print(classifier.predict(grayed_test.reshape(1,-1)))
+    print(classifier.predict_proba(grayed_test.reshape(1,-1)))
+    print(classifier.classes_)
