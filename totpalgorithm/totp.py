@@ -5,7 +5,7 @@ import hmac, base64, struct, hashlib, time, secrets
 
 SEED_LENGTH = 32
 SECRET_KEY = "MQ2TGZLEME3WCNRTG5RTSOLDMM3WMYRVGY3GIOJWMU4WMYJRGA4WEZRRGVRTINZYGQYTAYJTMY2WKYRUMQ2GGNDFGI3GGZBQHAYWMNQ="
-RANDOM_SEQUENCE = ['1', '3', 'A', 'D']
+RANDOM_SEQUENCE = ['2', '3', 'A', 'D']
 TIME=240
 
 TIME_INTERVAL=120
@@ -49,4 +49,4 @@ def generate_secret_key(seed):
     hex_string = m.hexdigest()
     return base64.b32encode(bytearray(hex_string, 'ascii')).decode('utf-8')
 
-print(get_totp_token(SECRET_KEY, RANDOM_SEQUENCE))
+#print(get_totp_token(SECRET_KEY, RANDOM_SEQUENCE))

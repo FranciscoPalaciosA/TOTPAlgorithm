@@ -4,7 +4,7 @@ from totp import (generate_seed, generate_secret_key,
 
 EMAIL="frankpa97@hotmail.com"
 SECRET_KEY = "MQ2TGZLEME3WCNRTG5RTSOLDMM3WMYRVGY3GIOJWMU4WMYJRGA4WEZRRGVRTINZYGQYTAYJTMY2WKYRUMQ2GGNDFGI3GGZBQHAYWMNQ="
-RANDOM_SEQUENCE = ['1', '2', 'A', 'C']
+RANDOM_SEQUENCE = ['3', '2', 'A', 'C']
 class TestTOTPalgorithm(unittest.TestCase):
 
     def test_generate_seed(self):
