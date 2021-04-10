@@ -17,7 +17,7 @@ movements = [
 dataset = []
 labels = []
 for movement in movements:
-    dir = f'./shape/{movement}/{USED_PAIR_OF_AXIS}'
+    dir = f'./compress/shape/{movement}/{USED_PAIR_OF_AXIS}'
     for filename in os.listdir(dir):
         if filename != '.DS_Store':
             f = os.path.join(dir, filename)
