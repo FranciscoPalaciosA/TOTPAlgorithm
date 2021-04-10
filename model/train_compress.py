@@ -20,7 +20,6 @@ def get_avg(arr):
 
 def compress_matrix(matrix):
     h, w = matrix.shape
-    print("H, w = ", h, w)
     new_h = int(h / 4)
     new_w = int(w / 4)
     jump = 4
@@ -34,11 +33,9 @@ def compress_matrix(matrix):
                 for l in range(4):
                     nums_to_avg.append(matrix[i * jump + k][j * jump + l])
             compressed_matrix[i][j] = get_avg(nums_to_avg)
-    
-    print(compressed_matrix.shape)
-    print("Compressed = ", compressed_matrix)
-    cv2.imwrite('./compress/shape/compressed.jpg', compressed_matrix)
-    cv2.imshow("image", compressed_matrix)
+    #cv2.imwrite('./compress/shape/compressed.jpg', compressed_matrix)
+    #cv2.imshow("image", compressed_matrix)
+    return compressed_matrix
 
 
 for movement in movements:

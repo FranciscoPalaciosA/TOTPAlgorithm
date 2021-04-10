@@ -35,6 +35,8 @@ n_samples = len(dataset)
 x = dataset.reshape((n_samples, -1))
 y = labels
 
+print("Shape X = ", x.shape)
+
 # Get train and test indexes
 sample_index = random.sample(range(len(x)), int((len(x)/5)*4))
 valid_index = [i for i in range(len(x)) if i not in sample_index]
