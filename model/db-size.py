@@ -49,10 +49,10 @@ def measure_db():
           )
       )
   print('----- Shapes ----- ')
-  shape_movements = sorted(os.listdir('./shape'))
+  shape_movements = sorted(os.listdir('./compress/shape'))
   for movement in shape_movements:
     if movement != '.DS_Store':
-      pair_of_vars = sorted(os.listdir(f'./shape/{movement}'))
+      pair_of_vars = sorted(os.listdir(f'./compress/shape/{movement}'))
       print(' * ' + movement)
       for pair in pair_of_vars:
         if pair != '.DS_Store':
@@ -61,7 +61,7 @@ def measure_db():
             " - " + 
             str(
               len(
-                [name for name in os.listdir(f'./shape/{movement}/{pair}') if os.path.isfile(f'./shape/{movement}/{pair}/{name}')]
+                [name for name in os.listdir(f'./compress/shape/{movement}/{pair}') if os.path.isfile(f'./compress/shape/{movement}/{pair}/{name}')]
                 )
               )
           )
