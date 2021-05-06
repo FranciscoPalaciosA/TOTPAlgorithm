@@ -21,7 +21,8 @@ def get_reference(reference_path: str) -> object:
 
 def plot_data(movement, mov_id, matrix):
   combinations = list(itertools.combinations(matrix.keys(), 2))
-  fig, axs = plt.subplots(3, 4)
+  print(combinations)
+  fig, axs = plt.subplots(2, 3)
   fig.suptitle(movement)
   i = 0
   j = 0
@@ -34,11 +35,11 @@ def plot_data(movement, mov_id, matrix):
 
     #axs[i,j].set_xlim([-1, 1])
     #axs[i,j].set_ylim([-1, 1])
-    axs[i, j].plot(matrix[var_2], matrix[var_1])
-    axs[i, j].set_title(str(var_2)+' vs ' + str(var_1))
-    j += 1
+    #axs[i, j].plot(matrix[var_2], matrix[var_1])
+    #axs[i, j].set_title(str(var_2)+' vs ' + str(var_1))
+    #j += 1
     
-    if j == 4:
+    if j == 3:
       j = 0
       i += 1
   plt.tight_layout()
