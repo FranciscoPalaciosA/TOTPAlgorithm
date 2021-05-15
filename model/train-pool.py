@@ -2,21 +2,35 @@ import os
 import sys
 import cv2
 import numpy as np
-import random
 from sklearn import ensemble
 import joblib
 
-from sklearn.model_selection import cross_val_score
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
 USED_PAIR_OF_AXIS = 'x-z'
 movements = [
         'Circle',
-        'Triangle',
+        # 'Triangle',
         'Infinity',
         'Square',
-        'S_Shape',
-        'Diamond'
+        # 'S_Shape',
+        # 'Diamond'
         ]
+classifiers = [
+        'RandomForestClassifier',
+        'ExtraTreesClassifier',
+        'MLPClassifier'
+        ]
+methods_score = {
+    "RandomForestClassifier": 0,
+    "ExtraTreesClassifier": 0,
+    "BaggingClassifier": 0,
+}
+dataset = []
+labels = []
 
 def getClassifier(actual_classifier):
     if actual_classifier == 'RandomForestClassifier':
@@ -27,27 +41,20 @@ def getClassifier(actual_classifier):
         return ensemble.AdaBoostClassifier()
     elif actual_classifier == 'ExtraTreesClassifier':
         return ensemble.ExtraTreesClassifier()
+    elif actual_classifier == 'MLPClassifier':
+        return MLPClassifier(hidden_layer_sizes=(10, 10, 10), max_iter=1000)
     return ensemble.RandomForestClassifier()
 
-methods_score = {
-    "RandomForestClassifier": 0,
-    "ExtraTreesClassifier": 0,
-    "BaggingClassifier": 0,
-}
-
-dataset = []
-labels = []
-
-
 def get_users_movements(correct):
-    dir_str = './users_shapes/incorrect'
+    correctIncorrect = 'incorrect'
     if correct:
-        dir_str = './users_shapes/correct'
-    movements = sorted(os.listdir(dir_str))
-
-    for movement in movements:
-        if movement != '.DS_Store':
-            dir = f'./users_shapes/correct/{movement}/{USED_PAIR_OF_AXIS}'
+        correctIncorrect = 'correct'
+    dir_str = f'./users_shapes/{correctIncorrect}'
+    funMovements = sorted(os.listdir(dir_str))
+    for movement in funMovements:
+        if movement != '.DS_Store' and movement in movements:
+            print(movement)
+            dir = f'{dir_str}/{movement}/{USED_PAIR_OF_AXIS}'
             for filename in os.listdir(dir):
                 if filename != '.DS_Store':
                     f = os.path.join(dir, filename)
@@ -86,39 +93,36 @@ def train():
     print("Samples length = ", n_samples)
     x = m_dataser.reshape((n_samples, -1))
     y = labels
+    # i = 0
+    # for label in y:
+    #     y[i] = movements.index(label)
+    #     i += 1
 
-    classifiers = [
-        'RandomForestClassifier',
-        'ExtraTreesClassifier',
-        #'BaggingClassifier'
-        ]
-
-    runs = 20
+    runs = 5
     previous_score = 0
     for i in range(runs):
-        # Get train and test indexes
-        sample_index = random.sample(range(len(x)), int((len(x)/5)*4))
-        valid_index = [i for i in range(len(x)) if i not in sample_index]
+        X_train, X_test, y_train, y_test = train_test_split(x, y, test_size = 0.20)
+        scaler = StandardScaler()
+        scaler.fit(X_train)
+        X_train = scaler.transform(X_train)
+        X_test = scaler.transform(X_test)
 
-        # Get samples to train
-        sample_images = [x[i] for i in sample_index]
-        sample_target = [y[i] for i in sample_index]
-
-        # Get samples to test
-        valid_images = [x[i] for i in valid_index]
-        valid_target = [y[i] for i in valid_index]
         print(" - Running - ", i)
         for actual_classifier in classifiers:
-            #print("   Doing ", actual_classifier)
             classifier = getClassifier(actual_classifier)
-            classifier.fit(sample_images, sample_target)
-            score = classifier.score(valid_images, valid_target)
-            print("    -  ", actual_classifier, score)
-            methods_score[actual_classifier] += score
-            if score > previous_score:
-                print('   -  highest score = ', score)
-                previous_score = score
-                joblib.dump(classifier, actual_classifier)
+            classifier.fit(X_train, y_train)
+            if actual_classifier != "MLPClassifier":
+                score = classifier.score(X_test, y_test)
+                print("    -  ", actual_classifier, score)
+                methods_score[actual_classifier] += score
+                if score > previous_score:
+                    print('   -  highest score = ', score)
+                    previous_score = score
+                    joblib.dump(classifier, actual_classifier)
+            else:
+                predictions = classifier.predict(X_test)
+                print(confusion_matrix(y_test,predictions))
+                print(classification_report(y_test,predictions))
 
     for method_name in methods_score:
         print(f"  --  {method_name} - {(methods_score[method_name] * 100) / runs} %")
@@ -143,7 +147,6 @@ def train_users_all():
 def train_users_correct():
     get_users_movements(True)
     train()
-    
     reset_arrays()
 
 def run():
