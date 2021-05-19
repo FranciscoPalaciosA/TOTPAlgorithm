@@ -13,21 +13,20 @@ from sklearn.preprocessing import StandardScaler
 USED_PAIR_OF_AXIS = 'x-z'
 movements = [
         'Circle',
-        # 'Triangle',
+        'Triangle',
         'Infinity',
         'Square',
-        # 'S_Shape',
-        # 'Diamond'
+        'S_Shape',
+        'Diamond'
         ]
 classifiers = [
         'RandomForestClassifier',
         'ExtraTreesClassifier',
-        'MLPClassifier'
+        # 'MLPClassifier'
         ]
 methods_score = {
     "RandomForestClassifier": 0,
     "ExtraTreesClassifier": 0,
-    "BaggingClassifier": 0,
 }
 dataset = []
 labels = []

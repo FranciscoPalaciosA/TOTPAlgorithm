@@ -3,9 +3,7 @@ import cv2
 import numpy as np
 import random
 from sklearn import ensemble
-import joblib
 
-from sklearn.model_selection import cross_val_score
 
 USED_PAIR_OF_AXIS = 'x-z'
 
@@ -25,8 +23,6 @@ def getClassifier(actual_classifier):
         return ensemble.RandomForestClassifier()
     elif actual_classifier == 'BaggingClassifier':
         return ensemble.BaggingClassifier()
-    elif actual_classifier == 'AdaBoostClassifier':
-        return ensemble.AdaBoostClassifier()
     elif actual_classifier == 'ExtraTreesClassifier':
         return ensemble.ExtraTreesClassifier()
     return ensemble.RandomForestClassifier()
