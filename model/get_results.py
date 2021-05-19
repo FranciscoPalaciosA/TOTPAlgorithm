@@ -57,9 +57,9 @@ def get_sus_score():
   data = ref.get()
   for user_id, value in data.items():
     if 'survey' in value:
-      print(f'User {user_id} - {value["survey"]["total"]}')
-
-#get_success_by_shape()
-#get_avg_model_time()
-#get_complete_success_ratio()
-#get_sus_score()
+      print(f'User {value["email"]} - {value["survey"]["question1"]}, {value["survey"]["question2"]}, {value["survey"]["question3"]}, {value["survey"]["question4"]}, {value["survey"]["question5"]}, {value["survey"]["question6"]}, {value["survey"]["question7"]}, {value["survey"]["question8"]}, {value["survey"]["question9"]}, {value["survey"]["question10"]} ')
+      print(f'{value["survey"]["sum"]} - {value["survey"]["total"]}')
+get_success_by_shape()
+get_avg_model_time()
+get_complete_success_ratio()
+get_sus_score()
